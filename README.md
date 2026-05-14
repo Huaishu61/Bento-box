@@ -1,137 +1,54 @@
-这份 README 将作为你项目的“说明书”，不仅让你自己随时能看懂，也能让你的合作者一秒 get 到这个项目的“拼图”协作模式。
+## 🛸 Vibe Coding 沉浸式开发指南
 
-你可以直接复制以下完整的 Markdown 代码，保存为项目根目录下的 `README.md` 文件。
+本项目采用 **Vibe Coding (直觉式 AI 辅助编程)** 模式进行维护和模块扩展。为了让 AI (如 Gemini, Claude, ChatGPT) 瞬间理解当前“空间站”的高内聚、低耦合架构，并写出完美契合系统的代码，请严格遵循以下三个步骤：
 
----
+### 🛠️ 工作流三步法
 
-```markdown
-# 🍱 Neon Bento Box | 极简赛博风个人主页生成器
-
-这是一个轻量级、零前端构建工具链的**“便当盒（Bento Box）”风格静态网页生成器**。它自带暗黑模式与霓虹灯悬停特效，非常适合作为极客、开发者的数字名片。
-
-本项目采用**“核心舱 + 插件化”**架构，极其适合团队协作。再也不用担心多人修改同一个 `index.html` 导致 Git 合并冲突了！
-
----
-
-## ✨ 核心特性
-
-* **零框架，极速构建**：无需安装 Node.js、React 或 Vue，只需原生 HTML/CSS 和一个轻量的 Python 组装脚本。
-* **模块化协作**：每个人只需维护自己专属的 HTML 碎片文件，彻底告别代码冲突。
-* **赛博霓虹美学**：内置完美的暗黑风格与 Cyan/Pink/Purple 霓虹发光过渡动画。
-* **自适应响应式**：PC 端完美的网格拼图，移动端自动优雅降级为单列信息流。
-* **GitHub Pages 友好**：一键生成纯静态文件，完美适配免费的 GitHub Pages 部署。
+1. **建立纯净连接**：在你的 AI 助手中开启一个**全新**的对话窗口，避免历史对话干扰上下文。
+2. **注入系统灵魂**：一键复制下方文本框（`[SYSTEM CONTEXT]`）中的所有内容，并作为**第一条消息**发送给 AI。
+3. **沉浸式下达指令**：当 AI 回复确认信号（*“🚀 空间站系统已连接...”*）后，你就可以直接用自然语言描述需求了。例如：
+   * 🗣️ *"帮我写一个 2x1 的倒计时方块，放在 modules 舱里，计算距离 2030 年的时间。"*
+   * 🗣️ *"我要一个回到顶部的小火箭，作为 widget 悬浮在右下角。"*
 
 ---
 
-## 📂 目录结构
+### 📋 专属 AI 提示词 (Prompt Context)
+
+请复制以下完整代码块发给 AI：
 
 ```text
-你的项目文件夹/
-├── build_bento.py      # ⚙️ 核心组装机器（引擎层，通常无需修改）
-├── modules/            # 🧩 对接舱（你和队友丢 HTML 代码碎片的地方）
-│   ├── 01_profile.html # 示例：个人简介模块
-│   └── 02_github.html  # 示例：GitHub 链接模块
-├── index.html          # 🌟 生成的最终网页（由机器自动生成，切勿手动修改）
-└── README.md           # 📖 本说明文档
+# [SYSTEM CONTEXT] 空间站 (Space Station) 静态主页项目生成指南
 
-```
+你现在是我项目的领航员，我们将采用 Vibe Coding 的方式继续开发一个名为“空间站”的极客风个人主页。这是一个基于 Python 静态生成器 (SSG) 和 HTML/CSS/JS 的无框架纯享版前端项目。
 
----
+请仔细阅读以下项目架构、现有功能和开发规范。在接下来的对话中，所有的代码生成都必须严格遵循这套规范，不要破坏现有的解耦架构。
 
-## 🚀 快速开始
+## 📂 1. 核心目录架构 (高度解耦)
+项目的核心思想是“主从分离”与“组件化”。
+- `core_engine.py`: 底层引擎。包含核心函数（读取文件 `get_file_contents`、拼装 HTML `assemble_html`）。不要轻易修改。
+- `build_hub.py`: 主控台。只负责定义路径并调用引擎，执行组装。不要在里面写具体业务逻辑。
+- `style.css`: 全局样式库。包含赛博朋克/霓虹主题（CSS变量）、Bento Box 便当盒网格布局、全局动画。
+- `modules/`: 碎片舱（网格模块）。里面存放按字母顺序排列的 `.html` 文件（如 `01_try.html`）。这些模块会被自动拼接到主页的网格中。
+- `widgets/`: 悬浮舱（全局插件）。存放不受网格限制的全局悬浮组件（如 `music_player.html`）。
+- `media/`: 静态资源。比如 `media/music/` 存放本地音频。
 
-### 1. 初始化对接舱
+## 🛠️ 2. CSS 接口与网格规范 (Bento Box API)
+新增 `modules/` 下的方块时，必须使用现有的 CSS 接口：
+- 基础容器：`<div class="bento-item">` 或 `<a href="..." class="bento-item">`。
+- 网格尺寸：默认 1x1。横条用 `span-2x1`，竖条用 `span-1x2`，大方块用 `span-2x2`。
+- 霓虹光效：添加 class `hover-cyan`, `hover-pink`, 或 `hover-purple` 实现鼠标悬停发光。
+- 内联样式原则：模块内部的微调使用内联 `style="..."`，不要污染全局 `style.css`，确保模块的“即插即用”性。
 
-确保你的电脑已安装 Python 3 环境。在项目根目录运行以下命令：
+## 🚀 3. 已实现的核心功能 (现状清单)
+- **悬浮胶囊导航栏**：毛玻璃效果，始终悬浮在顶部 `top: 20px`，居中对齐，已在 Python 引擎的底层模板中写死。
+- **动态天气雷达 (06_weather.html)**：在 1x2 的竖向方块中，使用原生 JS 调用浏览器 Geolocation API，并通过 OpenStreetMap (逆向地址) 和 Open-Meteo (天气) 获取当前街道级别的实时气象。
+- **GitHub 身份牌 (07_github.html)**：2x1 横条方块。直接使用 `.png` 后缀抓取 GitHub 实时头像，带有紫色光晕和静态描述。
+- **舱内电台 (widgets/music_player.html)**：右下角悬浮组件。纯 JS 实现的本地音频播放器（读取 `media/music/` 预载文件），支持播放、切歌、音量调节和列表高亮。
 
-```bash
-python build_bento.py
+## 👨‍💻 4. 你的任务与输出规范
+当我对你提出新需求时，请按以下逻辑思考并回答：
+1. **定位归属**：明确这个新功能应该属于 `modules/`（网格块）还是 `widgets/`（全局悬浮），或者是修改 `style.css`。
+2. **零侵入原则**：尽可能提供独立完整的 `.html` 文件内容让我直接放入对应文件夹，除非绝对必要，**绝对不要**让我去修改 `core_engine.py` 或 `build_hub.py`。
+3. **输出代码**：提供干净、带注释的代码，使用原生 JS 和 CSS，不需要任何如 React/Vue 等现代框架的语法。保持赛博/极客的风格。
 
-```
-
-*初次运行后，脚本会自动在同级目录下生成一个 `modules` 文件夹。*
-
-### 2. 添加你的便当盒模块
-
-进入 `modules` 文件夹，新建 `.html` 文件。**文件名的前缀数字决定了该模块在网页中的排列顺序**（例如 `01_xxx.html` 会排在 `02_xxx.html` 前面）。
-
-**示例模块代码：**
-
-```html
-<div class="bento-item span-2x2 hover-cyan">
-    <h2>你好，世界 🌍</h2>
-    <p>这是一个 2x2 大小的青色发光模块</p>
-</div>
-
-```
-
-### 3. 一键组装
-
-完成模块编写后，返回根目录再次运行脚本：
-
-```bash
-python build_bento.py
-
-```
-
-此时，同目录下会生成最新的 `index.html`。双击在浏览器中打开即可预览效果！
-
----
-
-## 🎨 样式与布局指南（写模块必看）
-
-在编写你自己的 HTML 模块时，你需要给最外层的标签（通常是 `<div>` 或 `<a>`）添加以下内置的 CSS 类名（Class），以控制它们的外观和大小。
-
-### 必选基础类
-
-* `bento-item`: 必须添加，赋予基础的便当盒背景、圆角和弹性布局。
-
-### 网格大小控制类（可选）
-
-默认不加的话是 1x1 的最小正方形。
-
-* `span-2x2`: 占据 2列 x 2行 的大正方形（适合核心简介、大图）。
-* `span-2x1`: 占据 2列 x 1行 的宽矩形（适合长文本、状态条）。
-* `span-1x2`: 占据 1列 x 2行 的高矩形（适合技能列表、竖向导航）。
-
-### 霓虹发光特效类（可选）
-
-* `hover-cyan`: 鼠标悬停时发**青色/湖蓝色**光。
-* `hover-pink`: 鼠标悬停时发**粉红色**光。
-* `hover-purple`: 鼠标悬停时发**紫色**光。
-
----
-
-## 🌐 部署到 GitHub Pages
-
-拥有属于自己的数字名片链接（`username.github.io`）：
-
-1. 在 GitHub 上新建一个仓库，命名为 `你的GitHub用户名.github.io`。
-2. 在本地项目中执行 Git 提交：
-```bash
-git init
-git add .
-git commit -m "feat: init bento box project"
-
-```
-
-
-3. 推送到 GitHub：
-```bash
-git branch -M main
-git remote add origin [https://github.com/你的用户名/你的用户名.github.io.git](https://github.com/你的用户名/你的用户名.github.io.git)
-git push -u origin main
-
-```
-
-
-4. 进入仓库的 **Settings** -> **Pages**，将 **Build and deployment** 下的 Source 设为 `Deploy from a branch`，Branch 选择 `main` 和 `/root`，点击 Save。
-5. 等待 1-2 分钟，即可通过你的专属域名访问！
-
----
-
-> "Talk is cheap. Show me the code." —— Linus Torvalds
-
-```
-
-```
+明白以上架构后，请简短回复“🚀 空间站系统已连接，随时可以开始构建新模块。”，然后等待我的具体指令。
