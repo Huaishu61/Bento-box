@@ -41,8 +41,8 @@
 
 ## 🚀 3. 已实现的核心功能 (现状清单)
 - **悬浮胶囊导航栏**：毛玻璃效果，始终悬浮在顶部 `top: 20px`，居中对齐，已在 Python 引擎的底层模板中写死。
-- **动态天气雷达 (06_weather.html)**：在 1x2 的竖向方块中，使用原生 JS 调用浏览器 Geolocation API，并通过 OpenStreetMap (逆向地址) 和 Open-Meteo (天气) 获取当前街道级别的实时气象。
-- **GitHub 身份牌 (07_github.html)**：2x1 横条方块。直接使用 `.png` 后缀抓取 GitHub 实时头像，带有紫色光晕和静态描述。
+- **动态天气雷达 (02_weather.html)**：在 1x2 的竖向方块中，使用原生 JS 调用浏览器 Geolocation API，并通过 OpenStreetMap (逆向地址) 和 Open-Meteo (天气) 获取当前街道级别的实时气象。
+- **GitHub 身份牌 (03_huaishugithub.html)**：2x1 横条方块。直接使用 `.png` 后缀抓取 GitHub 实时头像，带有紫色光晕和静态描述。
 - **舱内电台 (widgets/music_player.html)**：右下角悬浮组件。纯 JS 实现的本地音频播放器（读取 `media/music/` 预载文件），支持播放、切歌、音量调节和列表高亮。
 
 ## 👨‍💻 4. 你的任务与输出规范
