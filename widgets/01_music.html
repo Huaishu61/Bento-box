@@ -1,0 +1,88 @@
+<div class="music-player">
+    <div class="mp-header">
+        <span style="font-weight: bold; color: var(--neon-purple);">🎵 舱内电台</span>
+    </div>
+    
+    <div id="current-track" style="font-size: 0.8rem; text-align: center; margin-bottom: 12px; color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+        [ 系统待机中 ]
+    </div>
+
+    <div class="mp-controls">
+        <button class="mp-btn" id="btn-play">▶</button>
+        <button class="mp-btn" id="btn-stop">⏹</button>
+        <input type="range" class="mp-volume" id="volume-slider" min="0" max="1" step="0.05" value="0.5" title="音量调节">
+    </div>
+
+    <ul class="mp-playlist" id="playlist">
+        </ul>
+    
+    <audio id="main-audio"></audio>
+</div>
+
+<script>
+    const playlistEl = document.getElementById('playlist');
+    const audioEl = document.getElementById('main-audio');
+    const btnPlay = document.getElementById('btn-play');
+    const btnStop = document.getElementById('btn-stop');
+    const volumeSlider = document.getElementById('volume-slider');
+    const currentTrackLabel = document.getElementById('current-track');
+
+    // 👨‍💻 站长配置区
+    let playlist = [
+        { name: "🎵 赛博朋克环境音", url: "./media/music/cyberpunk.mp3" },
+        { name: "🚀 银河漫游", url: "./media/music/space.mp3" },
+        { name: "☕ 极客咖啡馆", url: "./media/music/lofi.mp3" }
+    ];
+    let currentIndex = -1;
+
+    playlist.forEach((track, index) => {
+        const li = document.createElement('li');
+        li.innerText = track.name;
+        li.onclick = () => playTrack(index);
+        playlistEl.appendChild(li);
+    });
+
+    function playTrack(index, autoPlay = true) {
+        if (index < 0 || index >= playlist.length) return;
+        currentIndex = index;
+        audioEl.src = playlist[index].url;
+        currentTrackLabel.innerText = "正在播放: " + playlist[index].name;
+        
+        Array.from(playlistEl.children).forEach((li, i) => {
+            if (i === index) li.classList.add('active');
+            else li.classList.remove('active');
+        });
+
+        if (autoPlay) {
+            audioEl.play();
+            btnPlay.innerText = '⏸';
+        }
+    }
+
+    btnPlay.onclick = () => {
+        if (playlist.length === 0) return;
+        if (currentIndex === -1) playTrack(0, false);
+        
+        if (audioEl.paused) {
+            audioEl.play();
+            btnPlay.innerText = '⏸';
+        } else {
+            audioEl.pause();
+            btnPlay.innerText = '▶';
+        }
+    };
+
+    btnStop.onclick = () => {
+        audioEl.pause();
+        audioEl.currentTime = 0;
+        btnPlay.innerText = '▶';
+    };
+
+    volumeSlider.oninput = (e) => audioEl.volume = e.target.value;
+    audioEl.volume = volumeSlider.value;
+    
+    audioEl.onended = () => {
+        if (currentIndex + 1 < playlist.length) playTrack(currentIndex + 1);
+        else btnPlay.innerText = '▶'; 
+    };
+</script>

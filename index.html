@@ -3,10 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>我的数字名片 | 空间站中转舱</title>
+    <title>空间站 | 数字化主页</title>
     <link rel="stylesheet" href="./style.css">
 </head>
 <body>
+    
+    <nav class="navbar">
+        <div class="nav-container">
+            <span class="nav-title">🚀 空间站</span>
+            <div class="nav-links">
+                <a href="#">🏠 首页</a>
+                <a href="#">🔬 实验室</a>
+                <a href="#">📦 资源舱</a>
+                <a href="#">✉️ 联络</a>
+            </div>
+        </div>
+    </nav>
+
     <div class="bento-grid">
         <a href="your_other_page.html" class="bento-item span-2x1 hover-pink">
     <h3 style="color: var(--neon-pink);">🚀 实验室作品集</h3>
@@ -17,6 +30,188 @@
         <span style="background: rgba(255, 0, 60, 0.1); padding: 4px 10px; border-radius: 12px;">Python</span>
     </div>
 </a>
+
+        
+        <div class="bento-item span-1x2 hover-cyan" id="weather-box" style="justify-content: space-evenly; padding: 1.5rem;">
+    <h3 style="margin: 0; font-size: 1rem; color: var(--neon-cyan);">🛰️ 精准气象雷达</h3>
+    
+    <div id="weather-icon" style="font-size: 3rem; margin: 10px 0; text-shadow: 0 0 15px rgba(0,240,255,0.4);">
+        📡
+    </div>
+    
+    <div id="weather-temp" style="font-size: 1.8rem; font-weight: bold; letter-spacing: 1px;">
+        定位中...
+    </div>
+    
+    <p id="weather-location" style="font-size: 0.8rem; margin-top: 10px; color: var(--neon-cyan); height: 2.4rem; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">
+        正在请求卫星授权
+    </p>
+
+    <script>
+        (function() {
+            const iconEl = document.getElementById('weather-icon');
+            const tempEl = document.getElementById('weather-temp');
+            const locEl = document.getElementById('weather-location');
+
+            // 1. 请求浏览器地理位置
+            if ("geolocation" in navigator) {
+                navigator.geolocation.getCurrentPosition(async (position) => {
+                    const lat = position.coords.latitude;
+                    const lon = position.coords.longitude;
+                    
+                    try {
+                        // 2. 调用免费地图 API 将坐标转换为街道名
+                        const geoRes = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json&zoom=16&addressdetails=1`);
+                        const geoData = await geoRes.json();
+                        // 提取街道、社区或城市名
+                        const street = geoData.address.road || geoData.address.neighbourhood || geoData.address.city || "未知区域";
+                        locEl.innerText = `📍 ${street}`;
+
+                        // 3. 根据坐标获取真实天气
+                        const weatherRes = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`);
+                        const weatherData = await weatherRes.json();
+                        const weather = weatherData.current_weather;
+                        const code = weather.weathercode;
+                        
+                        let icon = '☁️';
+                        if (code === 0) icon = '☀️'; 
+                        else if (code >= 1 && code <= 3) icon = '⛅'; 
+                        else if (code >= 51 && code <= 67) icon = '🌧️'; 
+                        else if (code >= 71 && code <= 77) icon = '❄️'; 
+                        else if (code >= 95) icon = '⚡'; 
+                        
+                        iconEl.innerText = icon;
+                        tempEl.innerText = weather.temperature + '°C';
+
+                    } catch (error) {
+                        iconEl.innerText = '⚠️';
+                        tempEl.innerText = '解析失败';
+                        locEl.innerText = "数据接口访问受限";
+                    }
+                }, (error) => {
+                    iconEl.innerText = '🚫';
+                    tempEl.innerText = '未授权';
+                    locEl.innerText = "您拒绝了位置访问或环境不支持";
+                });
+            } else {
+                locEl.innerText = "您的浏览器不支持雷达定位";
+            }
+        })();
+    </script>
+</div>
+
+        
+        <a href="https://github.com/Huaishu61" target="_blank" class="bento-item span-2x1 hover-purple" style="flex-direction: row; gap: 25px; text-align: left; padding: 2rem; justify-content: flex-start;">
+    
+    <img src="https://github.com/Huaishu61.png" alt="Huaishu61 Avatar" style="width: 85px; height: 85px; border-radius: 50%; border: 3px solid var(--neon-purple); box-shadow: 0 0 15px rgba(188, 19, 254, 0.4); object-fit: cover;">
+    
+    <div style="display: flex; flex-direction: column; justify-content: center;">
+        <h3 style="margin: 0; color: var(--text-main); font-size: 1.4rem; letter-spacing: 1px;">
+            Huaishu61
+        </h3>
+        <p style="color: var(--neon-purple); font-weight: bold; margin: 5px 0 10px 0; font-size: 0.9rem;">
+            🐙 GitHub 开源主页
+        </p>
+        <p style="font-size: 0.85rem; line-height: 1.5; margin: 0;">
+            探索我的开源宇宙，查看最新的代码提交与项目仓库。
+        </p>
+        
+        <div style="margin-top: 12px; font-size: 0.7rem; display: flex; gap: 10px;">
+            <span style="background: rgba(188, 19, 254, 0.1); color: var(--neon-purple); padding: 4px 10px; border-radius: 12px;">Repositories</span>
+            <span style="background: rgba(188, 19, 254, 0.1); color: var(--neon-purple); padding: 4px 10px; border-radius: 12px;">Contributions</span>
         </div>
+    </div>
+</a>
+    </div>
+
+    <div class="music-player">
+    <div class="mp-header">
+        <span style="font-weight: bold; color: var(--neon-purple);">🎵 舱内电台</span>
+    </div>
+    
+    <div id="current-track" style="font-size: 0.8rem; text-align: center; margin-bottom: 12px; color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+        [ 系统待机中 ]
+    </div>
+
+    <div class="mp-controls">
+        <button class="mp-btn" id="btn-play">▶</button>
+        <button class="mp-btn" id="btn-stop">⏹</button>
+        <input type="range" class="mp-volume" id="volume-slider" min="0" max="1" step="0.05" value="0.5" title="音量调节">
+    </div>
+
+    <ul class="mp-playlist" id="playlist">
+        </ul>
+    
+    <audio id="main-audio"></audio>
+</div>
+
+<script>
+    const playlistEl = document.getElementById('playlist');
+    const audioEl = document.getElementById('main-audio');
+    const btnPlay = document.getElementById('btn-play');
+    const btnStop = document.getElementById('btn-stop');
+    const volumeSlider = document.getElementById('volume-slider');
+    const currentTrackLabel = document.getElementById('current-track');
+
+    // 👨‍💻 站长配置区
+    let playlist = [
+        { name: "🎵 赛博朋克环境音", url: "./media/music/cyberpunk.mp3" },
+        { name: "🚀 银河漫游", url: "./media/music/space.mp3" },
+        { name: "☕ 极客咖啡馆", url: "./media/music/lofi.mp3" }
+    ];
+    let currentIndex = -1;
+
+    playlist.forEach((track, index) => {
+        const li = document.createElement('li');
+        li.innerText = track.name;
+        li.onclick = () => playTrack(index);
+        playlistEl.appendChild(li);
+    });
+
+    function playTrack(index, autoPlay = true) {
+        if (index < 0 || index >= playlist.length) return;
+        currentIndex = index;
+        audioEl.src = playlist[index].url;
+        currentTrackLabel.innerText = "正在播放: " + playlist[index].name;
+        
+        Array.from(playlistEl.children).forEach((li, i) => {
+            if (i === index) li.classList.add('active');
+            else li.classList.remove('active');
+        });
+
+        if (autoPlay) {
+            audioEl.play();
+            btnPlay.innerText = '⏸';
+        }
+    }
+
+    btnPlay.onclick = () => {
+        if (playlist.length === 0) return;
+        if (currentIndex === -1) playTrack(0, false);
+        
+        if (audioEl.paused) {
+            audioEl.play();
+            btnPlay.innerText = '⏸';
+        } else {
+            audioEl.pause();
+            btnPlay.innerText = '▶';
+        }
+    };
+
+    btnStop.onclick = () => {
+        audioEl.pause();
+        audioEl.currentTime = 0;
+        btnPlay.innerText = '▶';
+    };
+
+    volumeSlider.oninput = (e) => audioEl.volume = e.target.value;
+    audioEl.volume = volumeSlider.value;
+    
+    audioEl.onended = () => {
+        if (currentIndex + 1 < playlist.length) playTrack(currentIndex + 1);
+        else btnPlay.innerText = '▶'; 
+    };
+</script>
+
 </body>
 </html>

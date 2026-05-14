@@ -1,4 +1,6 @@
-/* style.css */
+/* =========================================
+   全局变量与基础设置
+========================================= */
 :root {
     --bg-color: #0d1117;
     --box-bg: #161b22;
@@ -8,26 +10,76 @@
     --neon-pink: #ff003c;
     --neon-purple: #bc13fe;
 }
+
 body {
-    margin: 0; padding: 2rem;
-    background-color: var(--bg-color); color: var(--text-main);
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    display: flex; justify-content: center; align-items: center;
+    margin: 0; 
+    padding: 2rem;
+    padding-top: 120px; /* 给顶部胶囊导航栏留出空间 */
+    background-color: var(--bg-color); 
+    color: var(--text-main);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    display: flex; 
+    justify-content: center; 
+    align-items: flex-start; /* 改为 flex-start 让内容可以在长页面正常滚动 */
     min-height: 100vh;
+    box-sizing: border-box;
 }
+
+/* =========================================
+   悬浮胶囊导航栏
+========================================= */
+.navbar {
+    position: fixed; 
+    top: 20px; 
+    left: 50%; 
+    transform: translateX(-50%); 
+    width: 90%; 
+    max-width: 850px; 
+    height: 60px;
+    background-color: rgba(22, 27, 34, 0.7); 
+    backdrop-filter: blur(12px); 
+    border: 1px solid rgba(0, 240, 255, 0.2); 
+    border-radius: 30px; 
+    z-index: 1000; 
+    display: flex; 
+    align-items: center; 
+    padding: 0 2rem;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5); 
+    box-sizing: border-box;
+}
+
+.nav-container { display: flex; justify-content: space-between; align-items: center; width: 100%; }
+.nav-title { color: var(--neon-cyan); font-size: 1.2rem; font-weight: 800; letter-spacing: 2px; text-shadow: 0 0 10px rgba(0, 240, 255, 0.3); }
+.nav-links { display: flex; gap: 2rem; }
+.nav-links a { color: var(--text-main); text-decoration: none; font-weight: 500; transition: all 0.3s; font-size: 0.95rem; }
+.nav-links a:hover { color: var(--neon-cyan); text-shadow: 0 0 8px rgba(0,240,255,0.4); }
+
+/* =========================================
+   Bento Box 便当盒网格系统
+========================================= */
 .bento-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     grid-auto-rows: 150px;
-    gap: 1.5rem; max-width: 900px; width: 100%;
+    gap: 1.5rem; 
+    max-width: 900px; 
+    width: 100%;
 }
+
 .bento-item {
-    background-color: var(--box-bg); border-radius: 20px; padding: 1.5rem;
-    display: flex; flex-direction: column; justify-content: center;
-    align-items: center; text-align: center;
+    background-color: var(--box-bg); 
+    border-radius: 20px; 
+    padding: 1.5rem;
+    display: flex; 
+    flex-direction: column; 
+    justify-content: center;
+    align-items: center; 
+    text-align: center;
     transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
     border: 1px solid rgba(255,255,255,0.05);
-    position: relative; text-decoration: none; color: inherit;
+    position: relative; 
+    text-decoration: none; 
+    color: inherit;
     box-sizing: border-box;
 }
 
@@ -42,10 +94,42 @@ body {
 .span-2x1 { grid-column: span 2; grid-row: span 1; }
 .span-1x2 { grid-column: span 1; grid-row: span 2; }
 
+/* 基础排版 */
 h1, h2, h3 { margin: 0 0 0.5rem 0; letter-spacing: 1px;}
 p { margin: 0; color: var(--text-muted); font-size: 0.9rem;}
 
+/* =========================================
+   右下角悬浮：舱内电台
+========================================= */
+.music-player {
+    position: fixed; right: 20px; bottom: 20px; width: 280px;
+    background: rgba(22, 27, 34, 0.85); backdrop-filter: blur(15px);
+    border: 1px solid rgba(188, 19, 254, 0.3); border-radius: 16px;
+    padding: 1.5rem; z-index: 999; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    transition: transform 0.3s;
+}
+.music-player:hover { border-color: var(--neon-purple); box-shadow: 0 0 20px rgba(188, 19, 254, 0.2); }
+
+.mp-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px;}
+.mp-controls { display: flex; gap: 15px; align-items: center; margin-bottom: 15px; justify-content: center; }
+.mp-btn { background: transparent; border: 1px solid var(--text-muted); color: var(--text-main); border-radius: 50%; width: 36px; height: 36px; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; font-size: 1rem;}
+.mp-btn:hover { border-color: var(--neon-purple); color: var(--neon-purple); }
+.mp-volume { width: 80px; cursor: pointer; accent-color: var(--neon-purple); }
+
+.mp-playlist { max-height: 120px; overflow-y: auto; list-style: none; padding: 0; margin: 0; font-size: 0.85rem; }
+.mp-playlist li { padding: 6px 8px; border-radius: 4px; cursor: pointer; display: flex; justify-content: space-between; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; margin-bottom: 2px;}
+.mp-playlist li:hover { background: rgba(255,255,255,0.1); color: var(--neon-cyan);}
+.mp-playlist li.active { color: var(--neon-purple); font-weight: bold; background: rgba(188, 19, 254, 0.1);}
+.mp-playlist::-webkit-scrollbar { width: 4px; }
+.mp-playlist::-webkit-scrollbar-thumb { background: var(--neon-purple); border-radius: 4px; }
+
+/* =========================================
+   响应式设计：手机端单列适配
+========================================= */
 @media (max-width: 768px) {
     .bento-grid { grid-template-columns: 1fr; grid-auto-rows: auto; }
     .span-2x2, .span-2x1, .span-1x2 { grid-column: span 1; grid-row: span 1; min-height: 150px; }
+    .navbar { width: 95%; padding: 0 1rem; }
+    .nav-links { gap: 1rem; }
+    .music-player { display: none; /* 手机端默认隐藏音乐播放器防遮挡 */ }
 }
