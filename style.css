@@ -1,0 +1,51 @@
+/* style.css */
+:root {
+    --bg-color: #0d1117;
+    --box-bg: #161b22;
+    --text-main: #c9d1d9;
+    --text-muted: #8b949e;
+    --neon-cyan: #00f0ff;
+    --neon-pink: #ff003c;
+    --neon-purple: #bc13fe;
+}
+body {
+    margin: 0; padding: 2rem;
+    background-color: var(--bg-color); color: var(--text-main);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    display: flex; justify-content: center; align-items: center;
+    min-height: 100vh;
+}
+.bento-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-auto-rows: 150px;
+    gap: 1.5rem; max-width: 900px; width: 100%;
+}
+.bento-item {
+    background-color: var(--box-bg); border-radius: 20px; padding: 1.5rem;
+    display: flex; flex-direction: column; justify-content: center;
+    align-items: center; text-align: center;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    border: 1px solid rgba(255,255,255,0.05);
+    position: relative; text-decoration: none; color: inherit;
+    box-sizing: border-box;
+}
+
+/* 霓虹灯悬停发光动画 */
+.bento-item:hover { transform: translateY(-5px); z-index: 10; }
+.hover-cyan:hover { box-shadow: 0 0 20px rgba(0, 240, 255, 0.4), inset 0 0 10px rgba(0, 240, 255, 0.1); border-color: var(--neon-cyan); }
+.hover-pink:hover { box-shadow: 0 0 20px rgba(255, 0, 60, 0.4), inset 0 0 10px rgba(255, 0, 60, 0.1); border-color: var(--neon-pink); }
+.hover-purple:hover { box-shadow: 0 0 20px rgba(188, 19, 254, 0.4), inset 0 0 10px rgba(188, 19, 254, 0.1); border-color: var(--neon-purple); }
+
+/* 网格跨度控制 */
+.span-2x2 { grid-column: span 2; grid-row: span 2; }
+.span-2x1 { grid-column: span 2; grid-row: span 1; }
+.span-1x2 { grid-column: span 1; grid-row: span 2; }
+
+h1, h2, h3 { margin: 0 0 0.5rem 0; letter-spacing: 1px;}
+p { margin: 0; color: var(--text-muted); font-size: 0.9rem;}
+
+@media (max-width: 768px) {
+    .bento-grid { grid-template-columns: 1fr; grid-auto-rows: auto; }
+    .span-2x2, .span-2x1, .span-1x2 { grid-column: span 1; grid-row: span 1; min-height: 150px; }
+}
