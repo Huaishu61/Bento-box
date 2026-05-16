@@ -605,6 +605,352 @@
         })();
     </script>
 </div>
+
+<style>
+    /* 模块专属隔离样式 */
+    .module-mjpark-profile {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 20px;
+        width: 100%;
+        text-align: left;
+    }
+
+    .mjpark-avatar {
+        width: 85px;
+        height: 85px;
+        border-radius: 50%; /* 保持你原本喜欢的圆形头像 */
+        border: 2px solid var(--neon-purple);
+        box-shadow: 0 0 15px rgba(188, 19, 254, 0.4);
+        object-fit: cover;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    /* 悬停时的头像脉冲放大特效 */
+    #bento-mjpark-profile:hover .mjpark-avatar {
+        transform: scale(1.08) rotate(5deg);
+        box-shadow: 0 0 25px rgba(188, 19, 254, 0.7);
+        border-color: var(--neon-cyan); /* 边框泛起青色干扰光 */
+    }
+
+    .mjpark-info {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        flex: 1;
+    }
+
+    .mjpark-status {
+        color: var(--neon-purple);
+        font-weight: bold;
+        margin: 4px 0 8px 0;
+        font-size: 0.85rem;
+        font-family: monospace;
+        letter-spacing: 1px;
+    }
+
+    .mjpark-tags {
+        margin-top: 12px;
+        font-size: 0.7rem;
+        display: flex;
+        gap: 10px;
+        font-family: monospace;
+    }
+
+    .mjpark-tag {
+        background: rgba(188, 19, 254, 0.1);
+        color: var(--neon-purple);
+        padding: 4px 10px;
+        border-radius: 4px; /* 改为微小圆角，更具极客感 */
+        border: 1px solid rgba(188, 19, 254, 0.3);
+        transition: all 0.3s ease;
+    }
+
+    #bento-mjpark-profile:hover .mjpark-tag {
+        background: rgba(188, 19, 254, 0.2);
+        color: var(--text-main);
+    }
+</style>
+
+<a href="https://github.com/MJPark7" target="_blank" class="bento-item span-2x1 hover-purple" id="bento-mjpark-profile">
+    <div class="module-mjpark-profile">
+        <img src="https://github.com/MJPark7.png" alt="MJPark7 Avatar" class="mjpark-avatar">
+        
+        <div class="mjpark-info">
+            <h3 style="margin: 0; color: var(--text-main); font-size: 1.4rem; letter-spacing: 1px;">
+                MJPark7
+            </h3>
+            <p class="mjpark-status">
+                👾 [ ALLY_PORT_CONNECTED ]
+            </p>
+            <p style="font-size: 0.85rem; line-height: 1.5; margin: 0; color: var(--text-muted);">
+                探索友军的开源宇宙，建立星际代码桥接。
+            </p>
+            
+            <div class="mjpark-tags">
+                <span class="mjpark-tag">REPOSITORIES</span>
+                <span class="mjpark-tag" id="mjpark-sync-tag">SYNCING...</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            // 给标签加个简单的假加载动画，提升赛博感
+            const syncTag = document.getElementById('mjpark-sync-tag');
+            const card = document.getElementById('bento-mjpark-profile');
+            let synced = false;
+
+            card.addEventListener('mouseenter', () => {
+                if(synced) return;
+                let dots = 0;
+                const interval = setInterval(() => {
+                    dots = (dots + 1) % 4;
+                    syncTag.innerText = "SYNC" + ".".repeat(dots);
+                }, 200);
+
+                setTimeout(() => {
+                    clearInterval(interval);
+                    syncTag.innerText = "CONTRIBUTIONS";
+                    syncTag.style.color = "var(--neon-cyan)";
+                    syncTag.style.borderColor = "var(--neon-cyan)";
+                    synced = true;
+                }, 1200);
+            });
+        })();
+    </script>
+</a>
+
+<style>
+    .module-extractor {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 100%;
+        padding: 10px;
+        box-sizing: border-box;
+    }
+
+    .extract-dropzone {
+        width: 100%;
+        flex: 1;
+        border: 2px dashed rgba(0, 240, 255, 0.4);
+        border-radius: 12px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background: rgba(0, 0, 0, 0.2);
+        transition: all 0.3s ease;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .extract-dropzone:hover, .extract-dropzone.dragover {
+        border-color: var(--neon-cyan);
+        background: rgba(0, 240, 255, 0.05);
+        box-shadow: inset 0 0 20px rgba(0, 240, 255, 0.1);
+    }
+
+    .extract-icon {
+        font-size: 2rem;
+        margin-bottom: 10px;
+        filter: drop-shadow(0 0 8px var(--neon-cyan));
+    }
+
+    .extract-text {
+        color: var(--text-main);
+        font-family: monospace;
+        font-size: 0.9rem;
+        text-align: center;
+        pointer-events: none;
+    }
+
+    .extract-subtext {
+        color: var(--text-muted);
+        font-size: 0.75rem;
+        margin-top: 5px;
+        pointer-events: none;
+    }
+
+    #mp4-file-input {
+        display: none;
+    }
+
+    /* 扫描光效 */
+    .scan-overlay {
+        position: absolute;
+        top: -100%;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(to bottom, transparent, rgba(0, 240, 255, 0.4), transparent);
+        transition: top 0.1s linear;
+        pointer-events: none;
+        display: none;
+    }
+
+    .extract-dropzone.processing .scan-overlay {
+        display: block;
+        animation: scan-down 1.5s linear infinite;
+    }
+
+    @keyframes scan-down {
+        0% { top: -100%; }
+        100% { top: 100%; }
+    }
+</style>
+
+<div class="bento-item span-2x2 hover-cyan">
+    <div class="module-extractor">
+        <h3 style="color: var(--neon-cyan); font-size: 1.1rem; margin-bottom: 15px; width: 100%; text-align: left;">
+            🎛️ MEDIA_DECODER [MP4->WAV]
+        </h3>
+        
+        <label class="extract-dropzone" id="dropzone-11">
+            <div class="scan-overlay"></div>
+            <div class="extract-icon">🎞️ ⚡ 🎵</div>
+            <div class="extract-text" id="status-text-11">点击或拖拽 MP4 文件至此</div>
+            <div class="extract-subtext" id="substatus-text-11">纯本地计算 / 零依赖 / 无损导出</div>
+            <input type="file" id="mp4-file-input" accept="video/mp4,video/*">
+        </label>
+    </div>
+
+    <script>
+        (function() {
+            const dropzone = document.getElementById('dropzone-11');
+            const fileInput = document.getElementById('mp4-file-input');
+            const statusText = document.getElementById('status-text-11');
+            const substatusText = document.getElementById('substatus-text-11');
+            let isProcessing = false;
+
+            // 拖拽事件处理
+            dropzone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                dropzone.classList.add('dragover');
+            });
+            dropzone.addEventListener('dragleave', () => dropzone.classList.remove('dragover'));
+            dropzone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                dropzone.classList.remove('dragover');
+                if (e.dataTransfer.files.length) processFile(e.dataTransfer.files[0]);
+            });
+
+            // 点击选择文件处理
+            fileInput.addEventListener('change', (e) => {
+                if (e.target.files.length) processFile(e.target.files[0]);
+                // 重置 input，允许重复选择同一个文件
+                e.target.value = ''; 
+            });
+
+            async function processFile(file) {
+                if (isProcessing) return;
+                if (!file.type.startsWith('video/')) {
+                    alert("错误：请上传视频文件！");
+                    return;
+                }
+
+                isProcessing = true;
+                dropzone.classList.add('processing');
+                statusText.innerText = `[1/3] 读取文件: ${file.name}...`;
+                substatusText.innerText = "正在将视频加载至内存阵列";
+
+                try {
+                    // 1. 读取文件
+                    const arrayBuffer = await file.arrayBuffer();
+                    
+                    statusText.innerText = "[2/3] 分离音轨...";
+                    substatusText.innerText = "解码媒体块中，请稍候 (由浏览器核心计算)";
+                    
+                    // 2. 解码音频数据
+                    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                    const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+                    
+                    statusText.innerText = "[3/3] 封装 WAV 格式...";
+                    substatusText.innerText = "生成无损音频波形";
+
+                    // 3. 转换为 WAV (纯原生算法)
+                    const wavBlob = audioBufferToWav(audioBuffer);
+                    
+                    // 4. 触发下载
+                    const url = URL.createObjectURL(wavBlob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    // 将文件名后缀改为 .wav
+                    a.download = file.name.replace(/\.[^/.]+$/, "") + "_extracted.wav"; 
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+
+                    statusText.innerText = "✅ 提取成功！";
+                    substatusText.innerText = "点击或拖拽 MP4 继续提取";
+                } catch (error) {
+                    console.error("音频提取失败:", error);
+                    statusText.innerText = "❌ 提取失败";
+                    substatusText.innerText = "该视频格式可能不受浏览器原生支持";
+                } finally {
+                    isProcessing = false;
+                    dropzone.classList.remove('processing');
+                    setTimeout(() => {
+                        if(!isProcessing) {
+                            statusText.innerText = "点击或拖拽 MP4 文件至此";
+                            substatusText.innerText = "纯本地计算 / 零依赖 / 无损导出";
+                        }
+                    }, 3000);
+                }
+            }
+
+            // 纯原生 JS 实现的 AudioBuffer 转 WAV 算法
+            function audioBufferToWav(buffer) {
+                const numOfChan = buffer.numberOfChannels;
+                const length = buffer.length * numOfChan * 2 + 44;
+                const bufferArray = new ArrayBuffer(length);
+                const view = new DataView(bufferArray);
+                const channels = [];
+                let offset = 0, pos = 0;
+
+                // 写入 WAV 头部 (RIFF)
+                function setUint16(data) { view.setUint16(pos, data, true); pos += 2; }
+                function setUint32(data) { view.setUint32(pos, data, true); pos += 4; }
+
+                setUint32(0x46464952); // "RIFF"
+                setUint32(length - 8); // file length - 8
+                setUint32(0x45564157); // "WAVE"
+                setUint32(0x20746d66); // "fmt " chunk
+                setUint32(16); // length = 16
+                setUint16(1); // PCM (uncompressed)
+                setUint16(numOfChan);
+                setUint32(buffer.sampleRate);
+                setUint32(buffer.sampleRate * 2 * numOfChan); // avg. bytes/sec
+                setUint16(numOfChan * 2); // block-align
+                setUint16(16); // 16-bit
+                setUint32(0x61746164); // "data" - chunk
+                setUint32(length - pos - 4); // chunk length
+
+                for (let i = 0; i < buffer.numberOfChannels; i++) {
+                    channels.push(buffer.getChannelData(i));
+                }
+
+                // 写入 PCM 采样数据
+                while (pos < length) {
+                    for (let i = 0; i < numOfChan; i++) {
+                        let sample = Math.max(-1, Math.min(1, channels[i][offset])); // clamp
+                        sample = (0.5 + sample < 0 ? sample * 32768 : sample * 32767) | 0; // scale to 16-bit
+                        view.setInt16(pos, sample, true);
+                        pos += 2;
+                    }
+                    offset++;
+                }
+                return new Blob([bufferArray], { type: "audio/wav" });
+            }
+        })();
+    </script>
+</div>
     </div>
 
     <div class="music-player">
@@ -638,9 +984,14 @@
 
     // 👨‍💻 站长配置区
     let playlist = [
-        { name: "🎵 赛博朋克环境音", url: "./media/music/cyberpunk.mp3" },
-        { name: "🚀 银河漫游", url: "./media/music/space.mp3" },
-        { name: "☕ 极客咖啡馆", url: "./media/music/lofi.mp3" }
+        { name: "小组曲", url: "./media/music/小组曲.wav" },
+       
+
+
+
+
+
+
     ];
     let currentIndex = -1;
 
@@ -694,6 +1045,162 @@
         if (currentIndex + 1 < playlist.length) playTrack(currentIndex + 1);
         else btnPlay.innerText = '▶'; 
     };
+</script>
+
+<style>
+    /* 模块专属隔离样式 */
+    .widget-font-switcher {
+        position: fixed;
+        left: 20px;
+        bottom: 20px;
+        background: rgba(22, 27, 34, 0.85);
+        backdrop-filter: blur(15px);
+        border: 1px solid rgba(0, 240, 255, 0.3);
+        border-radius: 12px;
+        padding: 1rem;
+        z-index: 999;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.5);
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        font-family: 'Consolas', monospace; /* 插件本身保持等宽 */
+        transition: all 0.3s ease;
+    }
+
+    .widget-font-switcher:hover {
+        border-color: var(--neon-cyan);
+        box-shadow: 0 0 15px rgba(0, 240, 255, 0.2);
+    }
+
+    .fs-header {
+        color: var(--text-muted);
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        border-bottom: 1px dashed rgba(0, 240, 255, 0.3);
+        padding-bottom: 4px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .fs-btn-group {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    .fs-btn {
+        background: transparent;
+        border: 1px solid rgba(139, 148, 158, 0.3);
+        color: var(--text-main);
+        padding: 4px 8px;
+        font-size: 0.8rem;
+        border-radius: 4px;
+        cursor: pointer;
+        text-align: left;
+        transition: all 0.2s;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .fs-btn:hover {
+        border-color: var(--neon-cyan);
+        color: var(--neon-cyan);
+        background: rgba(0, 240, 255, 0.05);
+    }
+
+    .fs-btn.active {
+        border-color: var(--neon-cyan);
+        color: var(--bg-color);
+        background: var(--neon-cyan);
+        font-weight: bold;
+    }
+</style>
+
+<div class="widget-font-switcher">
+    <div class="fs-header">
+        <span>👁️ UI_TYPOGRAPHY</span>
+        <span style="color: var(--neon-cyan);">[CTRL]</span>
+    </div>
+    <div class="fs-btn-group" id="fs-controls">
+        </div>
+</div>
+
+<script>
+    (function() {
+        // 字体矩阵配置字典
+        const fontMatrix = [
+            { 
+                id: 'sys_default', 
+                label: 'STARFLEET (默认)', 
+                body: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+                header: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
+            },
+            { 
+                id: 'sys_consolas', 
+                label: 'CONSOLAS (终端)', 
+                body: '"Consolas", "Courier New", monospace',
+                header: '"Consolas", "Courier New", monospace'
+            },
+            { 
+                id: 'sys_retro', 
+                label: 'RETRO (复古)', 
+                body: '"Lucida Console", "Monaco", monospace',
+                header: '"Lucida Console", "Monaco", monospace'
+            },
+            { 
+                id: 'sys_mecha', 
+                label: 'MECHA (重工)', 
+                body: '"Consolas", monospace', // 正文保持可读
+                header: '"Impact", "Arial Black", sans-serif' // 标题极具冲击力
+            }
+        ];
+
+        const container = document.getElementById('fs-controls');
+        const styleId = 'cyber-font-override';
+        let currentId = 'sys_default'; // 初始状态
+
+        // 核心切换逻辑
+        function applyFont(fontConfig) {
+            currentId = fontConfig.id;
+            
+            // 查找或创建用于覆盖全局的 style 标签
+            let styleEl = document.getElementById(styleId);
+            if (!styleEl) {
+                styleEl = document.createElement('style');
+                styleEl.id = styleId;
+                document.head.appendChild(styleEl);
+            }
+
+            // 注入高优先级 CSS
+            styleEl.innerHTML = `
+                body, p, span, a, div, li { font-family: ${fontConfig.body} !important; }
+                h1, h2, h3, h4, h5, h6, .nav-title { font-family: ${fontConfig.header} !important; }
+            `;
+
+            // 更新 UI 按钮状态
+            document.querySelectorAll('.fs-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.id === fontConfig.id);
+            });
+        }
+
+        // 初始化渲染按钮
+        fontMatrix.forEach(font => {
+            const btn = document.createElement('button');
+            btn.className = 'fs-btn';
+            btn.dataset.id = font.id;
+            btn.innerHTML = `<span>${font.label}</span> <span>[>]</span>`;
+            
+            // 默认激活状态
+            if (font.id === currentId) btn.classList.add('active');
+
+            btn.addEventListener('click', () => applyFont(font));
+            container.appendChild(btn);
+        });
+
+        console.log("✅ [System] Font Switcher widget deployed on port-side.");
+    })();
 </script>
 
 </body>

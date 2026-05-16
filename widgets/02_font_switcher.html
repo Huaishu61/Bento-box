@@ -1,0 +1,155 @@
+<style>
+    /* 模块专属隔离样式 */
+    .widget-font-switcher {
+        position: fixed;
+        left: 20px;
+        bottom: 20px;
+        background: rgba(22, 27, 34, 0.85);
+        backdrop-filter: blur(15px);
+        border: 1px solid rgba(0, 240, 255, 0.3);
+        border-radius: 12px;
+        padding: 1rem;
+        z-index: 999;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.5);
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        font-family: 'Consolas', monospace; /* 插件本身保持等宽 */
+        transition: all 0.3s ease;
+    }
+
+    .widget-font-switcher:hover {
+        border-color: var(--neon-cyan);
+        box-shadow: 0 0 15px rgba(0, 240, 255, 0.2);
+    }
+
+    .fs-header {
+        color: var(--text-muted);
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        border-bottom: 1px dashed rgba(0, 240, 255, 0.3);
+        padding-bottom: 4px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .fs-btn-group {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    .fs-btn {
+        background: transparent;
+        border: 1px solid rgba(139, 148, 158, 0.3);
+        color: var(--text-main);
+        padding: 4px 8px;
+        font-size: 0.8rem;
+        border-radius: 4px;
+        cursor: pointer;
+        text-align: left;
+        transition: all 0.2s;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .fs-btn:hover {
+        border-color: var(--neon-cyan);
+        color: var(--neon-cyan);
+        background: rgba(0, 240, 255, 0.05);
+    }
+
+    .fs-btn.active {
+        border-color: var(--neon-cyan);
+        color: var(--bg-color);
+        background: var(--neon-cyan);
+        font-weight: bold;
+    }
+</style>
+
+<div class="widget-font-switcher">
+    <div class="fs-header">
+        <span>👁️ UI_TYPOGRAPHY</span>
+        <span style="color: var(--neon-cyan);">[CTRL]</span>
+    </div>
+    <div class="fs-btn-group" id="fs-controls">
+        </div>
+</div>
+
+<script>
+    (function() {
+        // 字体矩阵配置字典
+        const fontMatrix = [
+            { 
+                id: 'sys_default', 
+                label: 'STARFLEET (默认)', 
+                body: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+                header: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
+            },
+            { 
+                id: 'sys_consolas', 
+                label: 'CONSOLAS (终端)', 
+                body: '"Consolas", "Courier New", monospace',
+                header: '"Consolas", "Courier New", monospace'
+            },
+            { 
+                id: 'sys_retro', 
+                label: 'RETRO (复古)', 
+                body: '"Lucida Console", "Monaco", monospace',
+                header: '"Lucida Console", "Monaco", monospace'
+            },
+            { 
+                id: 'sys_mecha', 
+                label: 'MECHA (重工)', 
+                body: '"Consolas", monospace', // 正文保持可读
+                header: '"Impact", "Arial Black", sans-serif' // 标题极具冲击力
+            }
+        ];
+
+        const container = document.getElementById('fs-controls');
+        const styleId = 'cyber-font-override';
+        let currentId = 'sys_default'; // 初始状态
+
+        // 核心切换逻辑
+        function applyFont(fontConfig) {
+            currentId = fontConfig.id;
+            
+            // 查找或创建用于覆盖全局的 style 标签
+            let styleEl = document.getElementById(styleId);
+            if (!styleEl) {
+                styleEl = document.createElement('style');
+                styleEl.id = styleId;
+                document.head.appendChild(styleEl);
+            }
+
+            // 注入高优先级 CSS
+            styleEl.innerHTML = `
+                body, p, span, a, div, li { font-family: ${fontConfig.body} !important; }
+                h1, h2, h3, h4, h5, h6, .nav-title { font-family: ${fontConfig.header} !important; }
+            `;
+
+            // 更新 UI 按钮状态
+            document.querySelectorAll('.fs-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.id === fontConfig.id);
+            });
+        }
+
+        // 初始化渲染按钮
+        fontMatrix.forEach(font => {
+            const btn = document.createElement('button');
+            btn.className = 'fs-btn';
+            btn.dataset.id = font.id;
+            btn.innerHTML = `<span>${font.label}</span> <span>[>]</span>`;
+            
+            // 默认激活状态
+            if (font.id === currentId) btn.classList.add('active');
+
+            btn.addEventListener('click', () => applyFont(font));
+            container.appendChild(btn);
+        });
+
+        console.log("✅ [System] Font Switcher widget deployed on port-side.");
+    })();
+</script>

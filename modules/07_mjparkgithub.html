@@ -1,0 +1,115 @@
+<style>
+    /* 模块专属隔离样式 */
+    .module-mjpark-profile {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 20px;
+        width: 100%;
+        text-align: left;
+    }
+
+    .mjpark-avatar {
+        width: 85px;
+        height: 85px;
+        border-radius: 50%; /* 保持你原本喜欢的圆形头像 */
+        border: 2px solid var(--neon-purple);
+        box-shadow: 0 0 15px rgba(188, 19, 254, 0.4);
+        object-fit: cover;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    /* 悬停时的头像脉冲放大特效 */
+    #bento-mjpark-profile:hover .mjpark-avatar {
+        transform: scale(1.08) rotate(5deg);
+        box-shadow: 0 0 25px rgba(188, 19, 254, 0.7);
+        border-color: var(--neon-cyan); /* 边框泛起青色干扰光 */
+    }
+
+    .mjpark-info {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        flex: 1;
+    }
+
+    .mjpark-status {
+        color: var(--neon-purple);
+        font-weight: bold;
+        margin: 4px 0 8px 0;
+        font-size: 0.85rem;
+        font-family: monospace;
+        letter-spacing: 1px;
+    }
+
+    .mjpark-tags {
+        margin-top: 12px;
+        font-size: 0.7rem;
+        display: flex;
+        gap: 10px;
+        font-family: monospace;
+    }
+
+    .mjpark-tag {
+        background: rgba(188, 19, 254, 0.1);
+        color: var(--neon-purple);
+        padding: 4px 10px;
+        border-radius: 4px; /* 改为微小圆角，更具极客感 */
+        border: 1px solid rgba(188, 19, 254, 0.3);
+        transition: all 0.3s ease;
+    }
+
+    #bento-mjpark-profile:hover .mjpark-tag {
+        background: rgba(188, 19, 254, 0.2);
+        color: var(--text-main);
+    }
+</style>
+
+<a href="https://github.com/MJPark7" target="_blank" class="bento-item span-2x1 hover-purple" id="bento-mjpark-profile">
+    <div class="module-mjpark-profile">
+        <img src="https://github.com/MJPark7.png" alt="MJPark7 Avatar" class="mjpark-avatar">
+        
+        <div class="mjpark-info">
+            <h3 style="margin: 0; color: var(--text-main); font-size: 1.4rem; letter-spacing: 1px;">
+                MJPark7
+            </h3>
+            <p class="mjpark-status">
+                👾 [ ALLY_PORT_CONNECTED ]
+            </p>
+            <p style="font-size: 0.85rem; line-height: 1.5; margin: 0; color: var(--text-muted);">
+                探索友军的开源宇宙，建立星际代码桥接。
+            </p>
+            
+            <div class="mjpark-tags">
+                <span class="mjpark-tag">REPOSITORIES</span>
+                <span class="mjpark-tag" id="mjpark-sync-tag">SYNCING...</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            // 给标签加个简单的假加载动画，提升赛博感
+            const syncTag = document.getElementById('mjpark-sync-tag');
+            const card = document.getElementById('bento-mjpark-profile');
+            let synced = false;
+
+            card.addEventListener('mouseenter', () => {
+                if(synced) return;
+                let dots = 0;
+                const interval = setInterval(() => {
+                    dots = (dots + 1) % 4;
+                    syncTag.innerText = "SYNC" + ".".repeat(dots);
+                }, 200);
+
+                setTimeout(() => {
+                    clearInterval(interval);
+                    syncTag.innerText = "CONTRIBUTIONS";
+                    syncTag.style.color = "var(--neon-cyan)";
+                    syncTag.style.borderColor = "var(--neon-cyan)";
+                    synced = true;
+                }, 1200);
+            });
+        })();
+    </script>
+</a>
