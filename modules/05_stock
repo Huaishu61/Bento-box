@@ -1,0 +1,180 @@
+<div class="bento-item span-2x1 hover-pink" style="display: flex; flex-direction: column; padding: 15px; position: relative; overflow: hidden; box-sizing: border-box; background-color: var(--box-bg);">
+    <style>
+        .cyber-sse-app {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            font-family: monospace;
+        }
+        .cyber-sse-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            letter-spacing: 1px;
+        }
+        .cyber-sse-title {
+            color: var(--text-main);
+            font-weight: bold;
+            border-bottom: 1px solid rgba(139, 148, 158, 0.3);
+            padding-bottom: 2px;
+        }
+        .cyber-sse-live {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: var(--neon-pink);
+            font-size: 0.7rem;
+        }
+        .cyber-sse-dot {
+            width: 6px;
+            height: 6px;
+            background-color: var(--neon-pink);
+            border-radius: 50%;
+            box-shadow: 0 0 5px var(--neon-pink);
+            animation: sse-pulse 1s infinite alternate;
+        }
+        @keyframes sse-pulse {
+            from { opacity: 0.3; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1.2); }
+        }
+        .cyber-sse-body {
+            display: flex;
+            align-items: baseline;
+            gap: 12px;
+            margin-top: 5px;
+        }
+        .cyber-sse-index {
+            font-size: 2.2rem;
+            font-weight: bold;
+            color: var(--text-main);
+            text-shadow: 0 0 10px rgba(201, 209, 217, 0.2);
+            transition: color 0.3s;
+        }
+        .cyber-sse-change {
+            font-size: 1rem;
+            font-weight: bold;
+            display: flex;
+            flex-direction: column;
+            line-height: 1.2;
+        }
+        /* 上涨样式 (骇客粉) */
+        .sse-up {
+            color: var(--neon-pink);
+            text-shadow: 0 0 5px rgba(255, 0, 60, 0.5);
+        }
+        /* 下跌样式 (赛博青) */
+        .sse-down {
+            color: var(--neon-cyan);
+            text-shadow: 0 0 5px rgba(0, 240, 255, 0.5);
+        }
+        .cyber-sse-footer {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            border-top: 1px dashed rgba(139, 148, 158, 0.2);
+            padding-top: 6px;
+        }
+        .cyber-sse-footer span span {
+            color: var(--neon-purple);
+            font-weight: bold;
+        }
+    </style>
+
+    <div class="cyber-sse-app">
+        <div class="cyber-sse-header">
+            <div class="cyber-sse-title">000001.SH [上证指数]</div>
+            <div class="cyber-sse-live">
+                <div class="cyber-sse-dot" id="sse-live-dot"></div>
+                <span id="sse-status-text">CONN...</span>
+            </div>
+        </div>
+        
+        <div class="cyber-sse-body">
+            <div class="cyber-sse-index" id="sse-current-value">3,000.00</div>
+            <div class="cyber-sse-change" id="sse-change-container">
+                <span id="sse-change-points">+0.00</span>
+                <span id="sse-change-percent">+0.00%</span>
+            </div>
+        </div>
+
+        <div class="cyber-sse-footer">
+            <span>VOL: <span id="sse-volume">452.1</span> B</span>
+            <span>AMT: <span id="sse-amount">389.4</span> B</span>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            // DOM 节点绑定
+            const elValue = document.getElementById('sse-current-value');
+            const elChangePts = document.getElementById('sse-change-points');
+            const elChangePct = document.getElementById('sse-change-percent');
+            const elContainer = document.getElementById('sse-change-container');
+            const elStatusText = document.getElementById('sse-status-text');
+            const elLiveDot = document.getElementById('sse-live-dot');
+            const elVolume = document.getElementById('sse-volume');
+
+            // 初始基准数据 (模拟昨日收盘价为 3050.12)
+            const prevClose = 3050.12;
+            let currentIndex = 3065.45; 
+            let currentVol = 452.1;
+
+            // 格式化千分位数字
+            const formatNumber = (num) => {
+                return num.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            };
+
+            // 核心渲染逻辑
+            const updateUI = () => {
+                const diff = currentIndex - prevClose;
+                const pct = (diff / prevClose) * 100;
+                const isUp = diff >= 0;
+
+                // 更新数值
+                elValue.textContent = formatNumber(currentIndex);
+                elChangePts.textContent = (isUp ? '+' : '') + diff.toFixed(2);
+                elChangePct.textContent = (isUp ? '+' : '') + pct.toFixed(2) + '%';
+                
+                // 模拟成交量微涨
+                currentVol += Math.random() * 0.5;
+                elVolume.textContent = currentVol.toFixed(1);
+
+                // 更新赛博色彩 (A股逻辑：红涨绿跌 -> 粉涨青跌)
+                if (isUp) {
+                    elContainer.className = 'cyber-sse-change sse-up';
+                    elValue.style.color = 'var(--neon-pink)';
+                    elLiveDot.style.backgroundColor = 'var(--neon-pink)';
+                    elLiveDot.style.boxShadow = '0 0 5px var(--neon-pink)';
+                } else {
+                    elContainer.className = 'cyber-sse-change sse-down';
+                    elValue.style.color = 'var(--neon-cyan)';
+                    elLiveDot.style.backgroundColor = 'var(--neon-cyan)';
+                    elLiveDot.style.boxShadow = '0 0 5px var(--neon-cyan)';
+                }
+            };
+
+            // 模拟高频交易数据流引擎
+            const simulateDataStream = () => {
+                // 随机波动：-1.5 到 +1.5 之间
+                const volatility = (Math.random() - 0.5) * 3; 
+                currentIndex += volatility;
+                
+                updateUI();
+            };
+
+            // 初始化装载
+            setTimeout(() => {
+                elStatusText.textContent = 'LIVE_STREAM';
+                updateUI();
+                // 设置数据流刷新频率 (1.5秒刷新一次盘口)
+                setInterval(simulateDataStream, 1500);
+            }, 800);
+
+        })();
+    </script>
+</div>
