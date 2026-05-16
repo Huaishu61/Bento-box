@@ -120,6 +120,39 @@
         </div>
     </div>
 </a>
+
+<!-- 05_cyber_calendar.html -->
+<div class="bento-item hover-cyan" style="padding: 12px; box-sizing: border-box; display: flex; flex-direction: column; gap: 8px;">
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h3 id="calendar-month" style="margin:0; color: var(--neon-cyan); font-size: 1rem;"></h3>
+        <span id="calendar-week" style="color: var(--neon-pink); font-size: 0.85rem;"></span>
+    </div>
+    
+    <div id="calendar-date" style="font-size: 2rem; font-weight: bold; color: var(--text-main); line-height: 1; text-align: center;"></div>
+    
+    <div style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; text-align: center; font-size: 0.7rem;">
+        <span style="color: var(--neon-cyan);">日</span>
+        <span style="color: var(--text-muted);">一</span>
+        <span style="color: var(--text-muted);">二</span>
+        <span style="color: var(--text-muted);">三</span>
+        <span style="color: var(--text-muted);">四</span>
+        <span style="color: var(--text-muted);">五</span>
+        <span style="color: var(--neon-pink);">六</span>
+    </div>
+
+    <script>
+        (function() {
+            const now = new Date();
+            const monthNames = ["01","02","03","04","05","06","07","08","09","10","11","12"];
+            const weekNames = ["周日","周一","周二","周三","周四","周五","周六"];
+
+            // 渲染日历数据
+            document.getElementById('calendar-month').textContent = `${now.getFullYear()}-${monthNames[now.getMonth()]}`;
+            document.getElementById('calendar-week').textContent = weekNames[now.getDay()];
+            document.getElementById('calendar-date').textContent = now.getDate();
+        })();
+    </script>
+</div>
     </div>
 
     <div class="music-player">
